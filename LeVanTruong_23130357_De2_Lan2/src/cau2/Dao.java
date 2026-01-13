@@ -63,9 +63,10 @@ public class Dao{
 
 	 
 	public boolean deposit(String numberAccount, double value)throws SQLException    {
-		String sql = "UPDATE users SET balance = balance + value WHERE numberAccount = ?";
+		String sql = "UPDATE users SET balance = balance + ? WHERE numberAccount = ?";
 		PreparedStatement pre = cnn.prepareStatement(sql);
-		pre.setString(1, numberAccount);
+		pre.setDouble(1, value);
+		pre.setString(2, numberAccount);
 		int row = pre.executeUpdate();
 		return row>0;
 	}
@@ -75,9 +76,10 @@ public class Dao{
 		if(getBalance(numberAccount)<value) {
 			return false;
 		}
-		String sql = "UPDATE users SET balance = balance - value WHERE numberAccount = ?";
+		String sql = "UPDATE users SET balance = balance - ? WHERE numberAccount = ?";
 		PreparedStatement pre = cnn.prepareStatement(sql);
-		pre.setString(1, numberAccount);
+		pre.setDouble(1, value);
+		pre.setString(2, numberAccount);
 		int row = pre.executeUpdate();
 		return row>0;
 	}

@@ -63,6 +63,7 @@ public class Client {
 				System.out.println(res);
 			}
 			while(isLogin) {
+				String numberAccount = dao.getNumberAccount(lastUser);
 				line = userIN.readLine();
 				if(line.equalsIgnoreCase("EXIT")) {
 					break;
@@ -70,7 +71,37 @@ public class Client {
 				analyze(line);
 				switch (com) {
 				case "DEPOSIT": {
-					
+					if(dao.deposit(numberAccount, Double.parseDouble(param))) {
+						res ="gui thanh cong so tien " + param;
+						dao.insertReport(numberAccount, com, Double.parseDouble(param));
+					}else {
+						res="loi giao dich";
+					}
+					break;
+				}
+				case "WITHDRAW": {
+					if(dao.withdraw(numberAccount, Double.parseDouble(param))) {
+						res ="rut thanh cong so tien " + param;
+						dao.insertReport(numberAccount, com, Double.parseDouble(param));
+
+					}else {
+						res="so du ko du";
+					}
+					break;
+				}
+				case "BALANCE": {
+					 	double balance = dao.getBalance(numberAccount);
+					 	if(balance!=-1) {
+					 		res="so du: "+ balance;
+					 	}
+					break;
+				}
+				case "REPORT": {
+					if(dao.getReport(numberAccount).size()>0) {
+						res = "lich su giao dich" + dao.getReport(numberAccount);
+					}else {
+						res = "ko co giao dich nao";
+					}
 					break;
 				}
 				default:
@@ -79,6 +110,7 @@ public class Client {
 				
 				System.out.println(res);
 			}
+			System.out.println("bye");
 		} catch (Exception e) {
 			e.getStackTrace();
 		}
