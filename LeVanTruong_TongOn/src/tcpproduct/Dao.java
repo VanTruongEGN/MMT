@@ -18,7 +18,7 @@ public class Dao {
 		}
 	}
 
-	public synchronized static void initConnection() throws ClassNotFoundException, SQLException {
+	public static void initConnection() throws ClassNotFoundException, SQLException {
 		if(cnn==null) {
 			String drive = "net.ucanaccess.jdbc.UcanaccessDriver";
 			String file = "D:\\hoc tap\\NetworkComputing\\LeVanTruong_23130357_De1\\src\\products.accdb";

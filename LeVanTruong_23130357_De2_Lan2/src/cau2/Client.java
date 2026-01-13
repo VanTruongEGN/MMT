@@ -10,13 +10,11 @@ public class Client {
 	BufferedReader userIN;
 	ISearch server;
 	String com, param;
-	SearchImpl dao;
 	public Client() {
 		try {
 			userIN = new BufferedReader(new InputStreamReader(System.in));
-			Registry reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
+			Registry reg = LocateRegistry.getRegistry("127.0.0.1", 1090);
 			server = (ISearch) reg.lookup("Search");
-			dao = new SearchImpl();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -36,7 +34,7 @@ public class Client {
 				analyze(line);
 				switch (com) {
 				case "USER": {
-					if(dao.checkUser(param)) {
+					if(server.checkUser(param)) {
 						lastUser = param;
 						res = "OK";
 					}else {
@@ -46,7 +44,7 @@ public class Client {
 				}
 				case "PASS": {
 					if(lastUser!=null) {
-						if(dao.login(lastUser, param)) {
+						if(server.login(lastUser, param)) {
 							res="Ok login";
 							isLogin = true;
 						}else {
@@ -63,7 +61,7 @@ public class Client {
 				System.out.println(res);
 			}
 			while(isLogin) {
-				String numberAccount = dao.getNumberAccount(lastUser);
+				String numberAccount = server.getNumberAccount(lastUser);
 				line = userIN.readLine();
 				if(line.equalsIgnoreCase("EXIT")) {
 					break;
@@ -71,18 +69,18 @@ public class Client {
 				analyze(line);
 				switch (com) {
 				case "DEPOSIT": {
-					if(dao.deposit(numberAccount, Double.parseDouble(param))) {
+					if(server.deposit(numberAccount, Double.parseDouble(param))) {
 						res ="gui thanh cong so tien " + param;
-						dao.insertReport(numberAccount, com, Double.parseDouble(param));
+						server.insertReport(numberAccount, com, Double.parseDouble(param));
 					}else {
 						res="loi giao dich";
 					}
 					break;
 				}
 				case "WITHDRAW": {
-					if(dao.withdraw(numberAccount, Double.parseDouble(param))) {
+					if(server.withdraw(numberAccount, Double.parseDouble(param))) {
 						res ="rut thanh cong so tien " + param;
-						dao.insertReport(numberAccount, com, Double.parseDouble(param));
+						server.insertReport(numberAccount, com, Double.parseDouble(param));
 
 					}else {
 						res="so du ko du";
@@ -90,22 +88,22 @@ public class Client {
 					break;
 				}
 				case "BALANCE": {
-					 	double balance = dao.getBalance(numberAccount);
+					 	double balance = server.getBalance(numberAccount);
 					 	if(balance!=-1) {
 					 		res="so du: "+ balance;
 					 	}
 					break;
 				}
 				case "REPORT": {
-					if(dao.getReport(numberAccount).size()>0) {
-						res = "lich su giao dich" + dao.getReport(numberAccount);
+					if(server.getReport(numberAccount).size()>0) {
+						res = "lich su giao dich" + server.getReport(numberAccount);
 					}else {
 						res = "ko co giao dich nao";
 					}
 					break;
 				}
 				default:
-					throw new IllegalArgumentException("Unexpected value: " + com);
+					res="lenh ko hop le";
 				}
 				
 				System.out.println(res);

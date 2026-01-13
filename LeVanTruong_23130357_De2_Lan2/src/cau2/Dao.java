@@ -10,13 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dao{
-	Connection cnn;
-	public Dao() throws ClassNotFoundException, SQLException {
-		String drive = "net.ucanaccess.jdbc.UcanaccessDriver";
-		String file = "D:\\hoc tap\\NetworkComputing\\LeVanTruong_23130357_De2_Lan2\\src\\bank.accdb";
-		String url ="jdbc:ucanaccess://"+file;
-		Class.forName(drive);
-		cnn = DriverManager.getConnection(url);
+	public static Connection cnn=null;
+	public static Dao instance=null;
+	
+	private Dao() throws ClassNotFoundException, SQLException {
+		initConnect();
+	}
+	public synchronized static Dao getInstance() throws ClassNotFoundException, SQLException {
+		if(instance==null) {
+			instance = new Dao();
+		}
+		return instance;
+	}
+	public static void initConnect() throws SQLException, ClassNotFoundException{
+		if(cnn==null) {
+			String drive = "net.ucanaccess.jdbc.UcanaccessDriver";
+			String file = "D:\\hoc tap\\NetworkComputing\\LeVanTruong_23130357_De2_Lan2\\src\\bank.accdb";
+			String url ="jdbc:ucanaccess://"+file;
+			Class.forName(drive);
+			cnn = DriverManager.getConnection(url);
+		}
 	}
 	 
 	public boolean checkUser(String username) throws SQLException   {

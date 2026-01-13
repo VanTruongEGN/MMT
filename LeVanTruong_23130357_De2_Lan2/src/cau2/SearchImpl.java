@@ -9,7 +9,7 @@ public class SearchImpl extends UnicastRemoteObject implements ISearch{
 	private Dao dao;
 	protected SearchImpl() throws RemoteException, ClassNotFoundException, SQLException {
 		super();
-		dao = new Dao();
+		dao = Dao.getInstance();
 	}
 
 	@Override
